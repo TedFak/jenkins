@@ -10,6 +10,7 @@ Failed to obtain http://11.0.0.2:8080/computer/agent/jenkins-agent.jnlp?encrypt=
 java.io.IOException: Failed to load http://11.0.0.2:8080/computer/agent/jenkins-agent.jnlp?encrypt=true: 404 Not Found
 
 https://github.com/TedFak/jenkins/blob/master/ansible/roles/deploy/templates/script.sh.j2
-
+```bash
 JENKINS_TOKEN=$(curl -s -u admin:"$ADMIN_PASS" 'http://11.0.0.2:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)' | sed 's/Jenkins-Crumb://g')
 java -jar /home/jenkins/agent.jar -jnlpUrl http://11.0.0.2:8080/computer/agent/jenkins-agent.jnlp -secret "$JENKINS_TOKEN" -workDir "/home/jenkins/agent"
+```
