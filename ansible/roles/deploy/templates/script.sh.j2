@@ -2,10 +2,10 @@
 
 ADMIN_PASS={{ admin_password.stdout }}
 
-JENKINS_TOKEN=$(curl -s -u admin:"$ADMIN_PASS" 'http://11.0.0.2:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')
+JENKINS_TOKEN=$(curl -s -u admin:"$ADMIN_PASS" 'http://11.0.0.2:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)' | sed 's/Jenkins-Crumb://g')
 
 curl http://11.0.0.2:8080/jnlpJars/jenkins-cli.jar -o /home/jenkins/agent/jenkins-cli.jar
 java -jar /home/jenkins/agent/jenkins-cli.jar -s http://11.0.0.2:8080/ create-node agent
 java -jar /home/jenkins/agent/jenkins-cli.jar -s http://11.0.0.2:8080/ connect-node agent
 curl -sO http://11.0.0.2:8080/jnlpJars/agent.jar
-java -jar /home/jenkins/agent/agent.jar -jnlpUrl http://11.0.0.2:8080/computer/agent/jenkins-agent.jnlp -auth admin:"$ADMIN_PASS" -secret "$JENKINS_TOKEN" -workDir "/home/jenkins/agent"
+java -jar /home/jenkins/agent.jar -jnlpUrl http://11.0.0.2:8080/computer/agent/jenkins-agent.jnlp -secret "$JENKINS_TOKEN" -workDir "/home/jenkins/agent"

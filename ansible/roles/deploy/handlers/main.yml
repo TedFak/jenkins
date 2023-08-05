@@ -21,4 +21,4 @@
 
 - name: time_pause
   pause:
-    minutes: 100
+    minutes: 10
