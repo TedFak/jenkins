@@ -1,0 +1,66 @@
+- name: Upgrade system
+  apt: upgrade=dist update_cache=yes
+
+- name: Installing package need for docker
+  apt: >
+   package={{ item }}
+   state=latest
+   update_cache=yes
+  with_items:
+    - ca-certificates
+    - curl
+    - gnupg
+    - gnupg-agent
+    - iptables
+    - firewalld
+    - libip6tc2
+
+- name: Download docker package
+  shell: 'wget https://download.docker.com/linux/debian/dists/bookworm/pool/stable/amd64/containerd.io_1.6.21-1_amd64.deb & \
+    wget https://download.docker.com/linux/debian/dists/bookworm/pool/stable/amd64/docker-ce_24.0.4-1~debian.12~bookworm_amd64.deb & \
+    wget https://download.docker.com/linux/debian/dists/bookworm/pool/stable/amd64/docker-ce-cli_24.0.4-1~debian.12~bookworm_amd64.deb & \
+    wget https://download.docker.com/linux/debian/dists/bookworm/pool/stable/amd64/docker-buildx-plugin_0.11.1-1~debian.12~bookworm_amd64.deb & \
+    wget https://download.docker.com/linux/debian/dists/bookworm/pool/stable/amd64/docker-compose-plugin_2.19.1-1~debian.12~bookworm_amd64.deb'
+
+
+- name: Installing docker package
+  shell: 'sudo dpkg -i ./containerd.io_1.6.21-1_amd64.deb \
+  ./docker-ce_24.0.4-1~debian.12~bookworm_amd64.deb \
+  ./docker-ce-cli_24.0.4-1~debian.12~bookworm_amd64.deb \
+  ./docker-buildx-plugin_0.11.1-1~debian.12~bookworm_amd64.deb \
+  ./docker-compose-plugin_2.19.1-1~debian.12~bookworm_amd64.deb'
+  notify:
+    - upgrade_system
+    - start_docker
+
+
+- name: Remove docker package
+  shell: 'sudo rm ./containerd.io_1.6.21-1_amd64.deb \
+  ./docker-ce_24.0.4-1~debian.12~bookworm_amd64.deb \
+  ./docker-ce-cli_24.0.4-1~debian.12~bookworm_amd64.deb \
+  ./docker-buildx-plugin_0.11.1-1~debian.12~bookworm_amd64.deb \
+  ./docker-compose-plugin_2.19.1-1~debian.12~bookworm_amd64.deb'
+
+
+- name: Add user admin
+  command: usermod -a -G docker admin
+
+- name: Test docker
+  command: docker run hello-world
+
+
+- name: Stop docker service
+  command: systemctl stop docker.service
+
+- name: Copy daemon.json network docker configuration.
+  template:
+    src: "daemon.json.j2"
+    dest: "/etc/docker/daemon.json"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart_docker
+
+- name: Print default network
+  command: docker network inspect bridge
+  register: print_net

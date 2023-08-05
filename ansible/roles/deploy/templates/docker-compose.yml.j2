@@ -1,0 +1,37 @@
+version: '3'
+services:
+  jenkins:
+    image: jenkins/jenkins:jdk17
+    container_name: jenkins
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - /home/admin/python_project/jenkins_home:/var/jenkins_home
+    restart: always
+    networks:
+      jn_net:
+        ipv4_address: 11.0.0.2
+
+  agent:
+    image: jenkins_agent:latest
+    container_name: agent
+    restart: always
+    user: root
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /home/admin/python_project/jenkins/agent:/home/jenkins/agent
+    command:
+    - /home/jenkins/agent/script.sh
+    entrypoint: ["/bin/sh", "-c"]
+    networks:
+      jn_net:
+        ipv4_address: 11.0.0.3
+
+networks:
+  jn_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "11.0.0.0/24"

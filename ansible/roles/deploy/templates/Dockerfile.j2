@@ -1,0 +1,11 @@
+FROM jenkins/jnlp-agent-alpine:latest
+
+USER root
+RUN apk update && \
+    apk add docker docker-cli && \
+    apk add python3 python3-dev py3-pip && \
+    addgroup jenkins docker
+
+ENV PATH="/usr/bin:$PATH"
+
+USER jenkins

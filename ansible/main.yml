@@ -1,0 +1,11 @@
+#- name: Start role Configurate
+#  hosts: all
+#  roles:
+#   - role: configurate
+#     become: yes
+
+- name: Start role Deploy
+  hosts: all
+  roles:
+   - role: deploy
+     become: yes

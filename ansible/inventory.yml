@@ -1,0 +1,14 @@
+---
+all:
+  hosts:
+    deb11:
+      ansible_host: 192.168.56.1
+
+  vars:
+    ansible_user: admin
+    ansible_ssh_pass: zscad20-
+    ansible_connection: ssh
+    become_user: root
+    become_method: sudo
+    ansible_become_pass: zscad20-
+    ansible_port: 22

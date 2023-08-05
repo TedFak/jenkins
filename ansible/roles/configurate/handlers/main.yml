@@ -1,0 +1,17 @@
+- name: restart_docker
+  service:
+    name: docker
+    state: restarted
+
+- name: start_docker
+  service:
+    name: docker
+    state: started
+
+- name: upgrade_system
+  apt: upgrade=dist update_cache=yes
+
+- name: stop_docker
+  service:
+    name: docker
+    state: stopped

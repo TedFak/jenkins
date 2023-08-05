@@ -1,0 +1,76 @@
+- name: Create a directory
+  file:
+    path: /home/admin/python_project/jenkins_home
+    state: directory
+
+- name: Create a directory
+  file:
+    path: /home/admin/python_project/jenkins/agent
+    state: directory
+
+- name: Create a directory
+  file:
+    path: /home/admin/python_project/image_agent
+    state: directory
+
+- name: Add docker-compose file
+  template:
+    src: "docker-compose.yml.j2"
+    dest: "/home/admin/python_project/docker-compose.yml"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add docker-compose file
+  template:
+    src: "Dockerfile.j2"
+    dest: "/home/admin/python_project/image_agent/Dockerfile"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Build image for agent
+  command: docker build -t jenkins_agent .
+  args:
+    chdir: /home/admin/python_project/image_agent
+
+- name: Build images in compose
+  command: docker compose -f /home/admin/python_project/docker-compose.yml build
+
+- name: Up jenkins in compose
+  command: docker compose -f /home/admin/python_project/docker-compose.yml up -d jenkins
+  notify:
+  - time_pause
+
+- name: Get jenkins admin password
+  command: sudo cat /home/admin/python_project/jenkins_home/secrets/initialAdminPassword
+  register: admin_password
+
+
+- name: Display admin password
+  debug:
+    var: admin_password.stdout
+
+- name: Add script.sh for agent
+  template:
+    src: "script.sh.j2"
+    dest: "/home/admin/python_project/jenkins/agent/script.sh"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: install agent.jar
+  command: curl -sO http://11.0.0.2:8080/jnlpJars/agent.jar
+  args:
+    chdir: /home/admin/python_project/jenkins/agent/
+
+- name: sad
+  command: chmod +x /home/admin/python_project/jenkins/agent/script.sh
+
+- name: Up agent in compose
+  command: docker compose -f /home/admin/python_project/docker-compose.yml up -d agent
+
+
+
+
+

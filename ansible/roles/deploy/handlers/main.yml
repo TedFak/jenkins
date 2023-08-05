@@ -1,0 +1,24 @@
+- name: restart_docker
+  service:
+    name: docker
+    state: restarted
+
+- name: start_docker
+  service:
+    name: docker
+    state: started
+
+- name: upgrade_system
+  apt: upgrade=dist update_cache=yes
+
+- name: stop_docker
+  service:
+    name: docker
+    state: stopped
+
+- name: remove_dir
+  command: rm -R /home/admin/python_project/jenkins_home
+
+- name: time_pause
+  pause:
+    minutes: 100
