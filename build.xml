@@ -1,0 +1,70 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-build plugin="workflow-job@1316.vd2290d3341a_f">
+  <actions>
+    <hudson.model.CauseAction>
+      <causeBag class="linked-hash-map">
+        <entry>
+          <hudson.model.Cause_-UserIdCause>
+            <userId>admin</userId>
+          </hudson.model.Cause_-UserIdCause>
+          <int>1</int>
+        </entry>
+      </causeBag>
+    </hudson.model.CauseAction>
+    <org.jenkinsci.plugins.workflow.libs.LibrariesAction plugin="pipeline-groovy-lib@656.va_a_ceeb_6ffb_f7">
+      <libraries/>
+    </org.jenkinsci.plugins.workflow.libs.LibrariesAction>
+  </actions>
+  <queueId>56</queueId>
+  <timestamp>1691253560425</timestamp>
+  <startTime>1691253560467</startTime>
+  <result>SUCCESS</result>
+  <duration>3043</duration>
+  <charset>UTF-8</charset>
+  <keepLog>false</keepLog>
+  <execution class="org.jenkinsci.plugins.workflow.cps.CpsFlowExecution">
+    <result>SUCCESS</result>
+    <script>node {
+    stage(&apos;Check Python Version&apos;) {
+        writeFile file: &apos;test.py&apos;, text: &apos;&apos;&apos;
+print(&quot;Hello, World!&quot;)
+&apos;&apos;&apos;
+        sh &quot;python3 test.py&quot;
+        
+        sh &apos;python3 -c &quot;print(\\&quot;Hello World!\\&quot;)&quot;&apos;
+    }
+}
+</script>
+    <loadedScripts class="map"/>
+    <durabilityHint>MAX_SURVIVABILITY</durabilityHint>
+    <timings class="map">
+      <entry>
+        <string>flowNode</string>
+        <long>1230280700</long>
+      </entry>
+      <entry>
+        <string>classLoad</string>
+        <long>3957300</long>
+      </entry>
+      <entry>
+        <string>run</string>
+        <long>2417604600</long>
+      </entry>
+      <entry>
+        <string>parse</string>
+        <long>9816900</long>
+      </entry>
+      <entry>
+        <string>saveProgram</string>
+        <long>765983800</long>
+      </entry>
+    </timings>
+    <sandbox>true</sandbox>
+    <iota>14</iota>
+    <head>1:14</head>
+    <done>true</done>
+    <resumeBlocked>false</resumeBlocked>
+  </execution>
+  <completed>true</completed>
+  <checkouts class="hudson.util.PersistedList"/>
+</flow-build>
