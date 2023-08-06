@@ -29,6 +29,27 @@
     group: root
     mode: 0644
 
+- name: Register File Stat
+  stat:
+    path: /root/.ssh/rsa_key.pub
+  register: stat_result
+
+- name: ssh-keygen
+  command: ssh-keygen -q -t rsa -f /root/.ssh/rsa_key -C "" -N ""
+  when: not stat_result.stat.exists
+
+- name: cat rsa key
+  command: sudo cat /root/.ssh/rsa_key
+  register: private_key
+
+- name: Display private key
+  debug:
+    var: private_key.stdout
+
+- name: cat rsa key
+  command: sudo cat /root/.ssh/rsa_key.pub
+  register: ssh_key
+
 - name: Build image for agent
   command: docker build -t jenkins_agent .
   args:
