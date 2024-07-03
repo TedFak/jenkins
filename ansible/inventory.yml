@@ -5,7 +5,7 @@ all:
       ansible_host: 192.168.56.1
 
   vars:
-    ansible_user: admin
+    ansible_user: admin1434
     ansible_ssh_pass: zscad20-
     ansible_connection: ssh
     become_user: root
